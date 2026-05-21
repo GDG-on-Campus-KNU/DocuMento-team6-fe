@@ -1,3 +1,5 @@
+import { useId } from 'react';
+
 type Props = {
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -7,7 +9,8 @@ type Props = {
 };
 
 export default function Toggle({ checked, onChange, label, disabled = false, id }: Props) {
-  const toggleId = id ?? `toggle-${label ?? 'default'}`;
+  const generatedId = useId();
+  const toggleId = id ?? generatedId;
 
   return (
     <div className="toggle">
