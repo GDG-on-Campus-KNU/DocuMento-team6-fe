@@ -152,8 +152,17 @@ function Label({ children, className = '' }: LabelProps) {
 // ---- Trigger ----
 
 function Trigger({ placeholder = '선택하세요', className = '', disabled }: TriggerProps) {
-  const { selectedValue, open, setOpen, triggerRef, itemsMap, setFocusedValue, listboxId, labelId, hasLabel } =
-    useSelectCtx();
+  const {
+    selectedValue,
+    open,
+    setOpen,
+    triggerRef,
+    itemsMap,
+    setFocusedValue,
+    listboxId,
+    labelId,
+    hasLabel,
+  } = useSelectCtx();
 
   const displayLabel = selectedValue
     ? (itemsMap.current.get(selectedValue)?.label ?? selectedValue)
@@ -195,7 +204,9 @@ function Trigger({ placeholder = '선택하세요', className = '', disabled }: 
         className,
       ].join(' ')}
     >
-      <span className={displayLabel ? 'text-[var(--color-text)]' : 'text-[var(--color-text-muted)]'}>
+      <span
+        className={displayLabel ? 'text-[var(--color-text)]' : 'text-[var(--color-text-muted)]'}
+      >
         {displayLabel ?? placeholder}
       </span>
       <svg
@@ -220,19 +231,24 @@ function Trigger({ placeholder = '선택하세요', className = '', disabled }: 
 // ---- Content ----
 
 function Content({ children, className = '' }: ContentProps) {
-  const { open, setOpen, triggerRef, itemsMap, focusedValue, setFocusedValue, onChange, listboxId } =
-    useSelectCtx();
+  const {
+    open,
+    setOpen,
+    triggerRef,
+    itemsMap,
+    focusedValue,
+    setFocusedValue,
+    onChange,
+    listboxId,
+  } = useSelectCtx();
 
   const contentRef = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState(false);
 
   useLayoutEffect(() => {
-    if (open) {
-      const id = requestAnimationFrame(() => setVisible(true));
-      return () => cancelAnimationFrame(id);
-    } else {
-      setVisible(false);
-    }
+    if (!open) return;
+    const id = requestAnimationFrame(() => setVisible(true));
+    return () => cancelAnimationFrame(id);
   }, [open]);
 
   useEffect(() => {
@@ -319,14 +335,23 @@ function Content({ children, className = '' }: ContentProps) {
 // ---- Item ----
 
 function Item({ value, children, disabled = false, className = '' }: ItemProps) {
-  const { selectedValue, onChange, setOpen, triggerRef, itemsMap, focusedValue, setFocusedValue, listboxId } =
-    useSelectCtx();
+  const {
+    selectedValue,
+    onChange,
+    setOpen,
+    triggerRef,
+    itemsMap,
+    focusedValue,
+    setFocusedValue,
+    listboxId,
+  } = useSelectCtx();
 
   useEffect(() => {
+    const map = itemsMap.current;
     const label = typeof children === 'string' ? children : value;
-    itemsMap.current.set(value, { value, label, disabled });
+    map.set(value, { value, label, disabled });
     return () => {
-      itemsMap.current.delete(value);
+      map.delete(value);
     };
   }, [value, children, disabled, itemsMap]);
 
